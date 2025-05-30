@@ -42,13 +42,21 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>report-aggregate</id>
                         <phase>verify</phase>
                         <goals>
                             <goal>report-aggregate</goal>
                         </goals>
                         <configuration>
+                            <dataFileIncludes>
+                                <dataFileInclude>**/jacoco.exec</dataFileInclude>
+                            </dataFileIncludes>
                             <outputDirectory>${project.reporting.outputDirectory}/jacoco-aggregate</outputDirectory>
+                            <excludes>
+                                <exclude>*$$anonfun$*</exclude>
+                                <exclude>*$lambda$*</exclude>
+                                <exclude>*$anon$*</exclude>
+                                <exclude>*.access$*</exclude>
+                            </excludes>
                         </configuration>
                     </execution>
                 </executions>
