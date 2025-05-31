@@ -24,8 +24,8 @@ jobs:
     - name: Build with Maven
       run: mvn -B verify
 
-    - name: List JaCoCo output
-      run: ls -R coverage/target/site/jacoco-aggregate
+    - name: Display JaCoCo Report Content
+      run: cat coverage/target/site/jacoco-aggregate/jacoco.xml
 
     - name: Upload to Coveralls
       uses: coverallsapp/github-action@v2
