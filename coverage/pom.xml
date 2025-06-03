@@ -64,7 +64,7 @@
             <plugin>
                 <groupId>com.github.hazendaz.maven</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
-                <version>4.7.0</version>
+                <version>4.3.0</version>
                 <configuration>
                     <!-- Adjust this path if jacoco.xml is elsewhere -->
                     <jacocoReports>${project.reporting.outputDirectory}/jacoco-aggregate/jacoco.xml</jacocoReports>
