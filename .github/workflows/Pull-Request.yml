@@ -27,11 +27,8 @@ jobs:
     - name: Display JaCoCo Report Content
       run: cat coverage/target/site/jacoco-aggregate/jacoco.xml
 
-    - name: Upload to Coveralls
-      uses: coverallsapp/github-action@v2
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        file: coverage/target/site/jacoco-aggregate/jacoco.xml
-        format: jacoco
+    - name: Send to Coveralls
+      working-directory: coverage
+      run: mvn -X coveralls:report
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
