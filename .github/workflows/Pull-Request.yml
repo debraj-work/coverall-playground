@@ -33,7 +33,6 @@ jobs:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
     - name: Send to Coveralls
-      working-directory: coverage
       run: mvn -X coveralls:report -DrepoToken=${COVERALLS_REPO_TOKEN}
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
