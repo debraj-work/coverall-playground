@@ -3,10 +3,15 @@ name: Java CI with Maven
 on:
   pull_request:
     types: [labeled]
+  schedule:
+    - cron: '0 */12 * * *'  # Every 12 hours
 
 jobs:
   build:
-    if: github.event.action != 'labeled' || contains(github.event.pull_request.labels.*.name, 'RunTests')
+    if: |
+      github.event_name != 'pull_request' ||
+      github.event.action != 'labeled' ||
+      contains(github.event.pull_request.labels.*.name, 'RunTests')
     runs-on: ubuntu-latest
 
     steps:
@@ -25,13 +30,18 @@ jobs:
       run: mvn -B verify
 
     - name: Display JaCoCo Report Content
-      run: cat coverage/target/site/jacoco-aggregate/jacoco.xml
+      run: cat coverage/target/site/jacoco-aggregate/jacoco.xml || echo "No report found"
 
-    - name: Upload to Coveralls
-      uses: coverallsapp/github-action@v2
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        file: coverage/target/site/jacoco-aggregate/jacoco.xml
-        format: jacoco
+    - name: Debug token env
+      run: echo "Token is ${COVERALLS_REPO_TOKEN:0:5}***"
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+    - name: Send to Coveralls
+      run: mvn coveralls:report -DrepoToken=${COVERALLS_REPO_TOKEN}
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        COVERALLS_SERVICE_NAME: github
+        COVERALLS_SERVICE_JOB_ID: ${{ github.run_id }}
+        COVERALLS_GIT_BRANCH: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.ref || github.ref_name }}
+        COVERALLS_SERVICE_PULL_REQUEST: ${{ github.event.pull_request.number || '' }}
